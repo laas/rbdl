@@ -21,8 +21,8 @@
 
   <export>
     <cpp
-       cflags="-I${prefix}/install/include `pkg-config --cflags omniORB4`"
-       lflags="-L${prefix}/install/lib -Wl,-rpath,${prefix}/install/lib `pkg-config --libs omniORB4`"
+       cflags="-I${prefix}/install/include"
+       lflags="-L${prefix}/install/lib -Wl,-rpath,${prefix}/install/lib -lrbdl"
        />
 
     <rosdoc config="rosdoc.yaml" />
