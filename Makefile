@@ -16,7 +16,7 @@ CMAKE_FLAGS = \
 	-DCMAKE_BUILD_TYPE:STRING='RelWithDebInfo' \
 	-DCMAKE_INSTALL_PREFIX:STRING=`rospack find rbdl`/$(INSTALL_DIR)/ \
 	-DBUILD_TESTS:BOOL=TRUE \
-	-DBUILD_ADDON_URDFREADER:BOOL=FALSE
+	-DBUILD_ADDON_URDFREADER:BOOL=TRUE
 
 include $(shell rospack find mk)/download_unpack_build.mk
 
@@ -25,10 +25,12 @@ rbdl: $(INSTALL_DIR)/installed
 # This build step incorporates a crude hack to remove the Eigen library
 # embedded in RBDL and build the library against the system library
 # instead.
+# Also, replace the ros.cmake file which does not behave correctly.
 $(INSTALL_DIR)/installed: $(SOURCE_DIR)/unpacked
 	cd $(SOURCE_DIR)	  		\
 	&& rm -rf src/Eigen			\
 	&& ln -sf `pkg-config --cflags-only-I --cflags eigen3 | sed "s|-I\([^ ]*\)|\1/Eigen|g"` src \
+	&& cp `rospack find rbdl`/ros.cmake addons/urdfreader/CMake/ros.cmake \
 	&& cmake . $(CMAKE_FLAGS)		\
 	&& make			  		\
 	&& make install				\

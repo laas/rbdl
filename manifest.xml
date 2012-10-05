@@ -32,10 +32,8 @@
      type="hg"
      url="https://bitbucket.org/rbdl/rbdl"/>
 
-  <!--
   <depend package="urdf" />
   <depend package="urdf_interface" />
-  -->
 
   <rosdep name="eigen" />
   <rosdep name="libunittest++" />
