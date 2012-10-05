@@ -8,9 +8,14 @@
       <li>Recursive Newton Euler Algorithm,</li>
       <li>Composite Rigid Body Algorithm,</li>
       <li>Articulated Body Algorithm.</li>
+    </ul>
+
+    The code is written by Martin Felis and heavily inspired by the
+    pseudo code of the book "Rigid Body Dynamics Algorithms" of Roy
+    Featherstone.
   </description>
-  <author>Thomas Moulard/thomas.moulard@gmail.com</author>
-  <license>BSD</license>
+  <author>Packaged by Thomas Moulard/thomas.moulard@gmail.com</author>
+  <license>zlib</license>
   <review status="experimental" notes=""/>
   <url>http://rbdl.bitbucket.org/</url>
 
@@ -27,6 +32,10 @@
      type="hg"
      url="https://bitbucket.org/rbdl/rbdl"/>
 
+  <depend package="urdf" />
+  <depend package="urdf_interface" />
+
   <rosdep name="eigen" />
   <rosdep name="doxygen" />
+  <rosdep name="libunittest++" />
 </package>

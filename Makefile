@@ -13,8 +13,10 @@ MD5SUM_FILE = rbdl-$(VERSION).tar.bz2.md5sum
 INSTALL_DIR = install
 
 CMAKE_FLAGS = \
-	-DCMAKE_RELEASE:STRING='RelWithDebInfo'				  \
-	-DCMAKE_INSTALL_PREFIX:STRING=`rospack find rbdl`/$(INSTALL_DIR)/
+	-DCMAKE_BUILD_TYPE:STRING='RelWithDebInfo' \
+	-DCMAKE_INSTALL_PREFIX:STRING=`rospack find rbdl`/$(INSTALL_DIR)/ \
+	-DBUILD_TESTS:BOOL=TRUE \
+	-DBUILD_ADDON_URDFREADER:BOOL=FALSE
 
 include $(shell rospack find mk)/download_unpack_build.mk
 
