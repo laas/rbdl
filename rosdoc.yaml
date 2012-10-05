@@ -1,0 +1,8 @@
+ - builder: external
+   external_url: https://bitbucket.org/rbdl/rbdl/http://rbdl.bitbucket.org/
+   output_dir: homepage
+   name: Project Homepage
+ - builder: external
+   external_url: http://rbdl.bitbucket.org/
+   output_dir: cpp
+   name: C++ API

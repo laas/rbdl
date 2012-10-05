@@ -1,0 +1,18 @@
+<stack>
+  <description brief="RBDL">
+    ROS package of the 3rd party package RBDL.
+
+    RBDL, the Rigid Body Dynamics Library. The library contains highly
+    efficient code for both forward and inverse dynamics. It includes:
+    <ul>
+      <li>Recursive Newton Euler Algorithm,</li>
+      <li>Composite Rigid Body Algorithm,</li>
+      <li>Articulated Body Algorithm.</li>
+  </description>
+  <author>Thomas Moulard/thomas.moulard@gmail.com</author>
+  <license>BSD</license>
+  <review status="experimental" notes=""/>
+  <url>http://ros.org/wiki/rbdl</url>
+  <depend stack="ros" />
+  <depend stack="documentation" />
+</stack>

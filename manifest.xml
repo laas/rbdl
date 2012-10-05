@@ -1,0 +1,32 @@
+<package>
+  <description brief="RBDL">
+    ROS package of the 3rd party package RBDL.
+
+    RBDL, the Rigid Body Dynamics Library. The library contains highly
+    efficient code for both forward and inverse dynamics. It includes:
+    <ul>
+      <li>Recursive Newton Euler Algorithm,</li>
+      <li>Composite Rigid Body Algorithm,</li>
+      <li>Articulated Body Algorithm.</li>
+  </description>
+  <author>Thomas Moulard/thomas.moulard@gmail.com</author>
+  <license>BSD</license>
+  <review status="experimental" notes=""/>
+  <url>http://rbdl.bitbucket.org/</url>
+
+  <export>
+    <cpp
+       cflags="-I${prefix}/install/include `pkg-config --cflags omniORB4`"
+       lflags="-L${prefix}/install/lib -Wl,-rpath,${prefix}/install/lib `pkg-config --libs omniORB4`"
+       />
+
+    <rosdoc config="rosdoc.yaml" />
+  </export>
+
+  <versioncontrol
+     type="hg"
+     url="https://bitbucket.org/rbdl/rbdl"/>
+
+  <rosdep name="eigen" />
+  <rosdep name="doxygen" />
+</package>
