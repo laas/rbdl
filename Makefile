@@ -22,11 +22,17 @@ include $(shell rospack find mk)/download_unpack_build.mk
 
 rbdl: $(INSTALL_DIR)/installed
 
+# This build step incorporates a crude hack to remove the Eigen library
+# embedded in RBDL and build the library against the system library
+# instead.
 $(INSTALL_DIR)/installed: $(SOURCE_DIR)/unpacked
 	cd $(SOURCE_DIR)	  		\
+	&& rm -rf src/Eigen			\
+	&& ln -sf `pkg-config --cflags-only-I --cflags eigen3 | sed "s|-I\([^ ]*\)|\1/Eigen|g"` src \
 	&& cmake . $(CMAKE_FLAGS)		\
 	&& make			  		\
-	&& make install
+	&& make install				\
+	&& rm -rf `rospack find rbdl`/$(INSTALL_DIR)/include/rbdl/Eigen
 	touch $(INSTALL_DIR)/installed
 
 clean:

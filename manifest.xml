@@ -21,8 +21,8 @@
 
   <export>
     <cpp
-       cflags="-I${prefix}/install/include"
-       lflags="-L${prefix}/install/lib -Wl,-rpath,${prefix}/install/lib -lrbdl"
+       cflags="-I${prefix}/install/include `pkg-config  --cflags eigen3`"
+       lflags="-L${prefix}/install/lib -Wl,-rpath,${prefix}/install/lib `pkg-config  --libs eigen3` -lrbdl"
        />
 
     <rosdoc config="rosdoc.yaml" />
