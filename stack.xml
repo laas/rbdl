@@ -18,7 +18,5 @@
   <license>zlib</license>
   <review status="experimental" notes=""/>
   <url>http://ros.org/wiki/rbdl</url>
-  <depend stack="robot_model" /> <!-- urdf_interface, urdf -->
   <depend stack="ros" />
-
 </stack>
