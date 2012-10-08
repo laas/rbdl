@@ -21,7 +21,7 @@
 
   <export>
     <cpp
-       cflags="-I${prefix}/install/include `pkg-config  --cflags eigen3`"
+       cflags="-I${prefix}/install/include -I${prefix}/install/include/rbdl `pkg-config  --cflags eigen3`"
        lflags="-L${prefix}/install/lib -Wl,-rpath,${prefix}/install/lib `pkg-config  --libs eigen3` -lrbdl"
        />
 
