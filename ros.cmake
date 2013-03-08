@@ -17,25 +17,34 @@ MACRO(ADD_ROSPACK_DEPENDENCY PKG)
   ENDIF()
 
   MESSAGE(STATUS "Looking for ${PKG} using rospack...")
-  EXEC_PROGRAM("${ROSPACK} find ${PKG}" OUTPUT_VARIABLE ${PKG}_ROS_PREFIX)
+  EXECUTE_PROCESS(
+    COMMAND "${ROSPACK}" find "${PKG}"
+    OUTPUT_VARIABLE "${PKG}_ROS_PREFIX"
+    ERROR_QUIET)
   IF(NOT ${PKG}_ROS_PREFIX)
     MESSAGE(FATAL_ERROR "Failed to detect ${PKG}.")
   ENDIF()
 
   SET(${PREFIX}_FOUND 1)
-  EXEC_PROGRAM("${ROSPACK} export --lang=cpp --attrib=cflags ${PKG}"
-    OUTPUT_VARIABLE "${PREFIX}_CFLAGS")
-  EXEC_PROGRAM("${ROSPACK} export --lang=cpp --attrib=lflags ${PKG}"
-    OUTPUT_VARIABLE "${PREFIX}_LIBS")
+  EXECUTE_PROCESS(
+    COMMAND "${ROSPACK}" export "--lang=cpp" "--attrib=cflags" "${PKG}"
+    OUTPUT_VARIABLE "${PREFIX}_CFLAGS"
+    ERROR_QUIET)
+  EXECUTE_PROCESS(
+    COMMAND "${ROSPACK}" export "--lang=cpp" "--attrib=lflags" "${PKG}"
+    OUTPUT_VARIABLE "${PREFIX}_LIBS"
+    ERROR_QUIET)
+  STRING(REPLACE "\n" "" ${PREFIX}_CFLAGS "${${PREFIX}_CFLAGS}")
+  STRING(REPLACE "\n" "" ${PREFIX}_LIBS "${${PREFIX}_LIBS}")
 
   # Add flags to package pkg-config file.
-  PKG_CONFIG_APPEND_CFLAGS (${${PREFIX}_CFLAGS})
-  PKG_CONFIG_APPEND_LIBS_RAW (${${PREFIX}_LIBS})
+  PKG_CONFIG_APPEND_CFLAGS ("${${PREFIX}_CFLAGS}")
+  PKG_CONFIG_APPEND_LIBS_RAW ("${${PREFIX}_LIBS}")
 ENDMACRO()
 
 MACRO(ROSPACK_USE_DEPENDENCY TARGET PKG)
   IF(PKG STREQUAL "")
-    MESSAGE(FATAL_ERROR "ADD_ROS_DEPENDENCY invalid call.")
+    MESSAGE(FATAL_ERROR "ROSPACK_USE_DEPENDENCY invalid call.")
   ENDIF()
 
   # Transform package name into a valid variable prefix.
@@ -57,15 +66,6 @@ MACRO(ROSPACK_USE_DEPENDENCY TARGET PKG)
     SET(LDFLAGS "")
   ENDIF()
 
-  # Transform semi-colon seperated list in to space separated list.
-  FOREACH(FLAG ${${PREFIX}_CFLAGS})
-    SET(CFLAGS "${CFLAGS} ${FLAG}")
-  ENDFOREACH()
-
-  FOREACH(FLAG ${${PREFIX}_LDFLAGS})
-    SET(LDFLAGS "${LDFLAGS} ${FLAG}")
-  ENDFOREACH()
-
   # Filter out end of line in new flags.
   STRING(REPLACE "\n" "" ${PREFIX}_CFLAGS "${${PREFIX}_CFLAGS}")
   STRING(REPLACE "\n" "" ${PREFIX}_LIBS "${${PREFIX}_LIBS}")
@@ -75,6 +75,18 @@ MACRO(ROSPACK_USE_DEPENDENCY TARGET PKG)
   SET(LDFLAGS "${LDFLAGS} ${${PREFIX}_LIBS}")
 
   # Update the flags.
-  SET_TARGET_PROPERTIES(${TARGET}
+  SET_TARGET_PROPERTIES("${TARGET}"
     PROPERTIES COMPILE_FLAGS "${CFLAGS}" LINK_FLAGS "${LDFLAGS}")
+
+  # Correct the potential link issue due to the order of link flags.
+  #  (appears e.g. on ubuntu 12.04).
+  # Note that this issue is the same as the one in pkg-config.cmake,
+  #  method PKG_CONFIG_USE_LLINK_DEPENDENCY
+  IF(UNIX AND NOT APPLE)
+    # convert the string in a list
+    STRING(REPLACE " " ";" LDFLAGS_LIST "${LDFLAGS}")
+    FOREACH(dep ${LDFLAGS_LIST})
+      TARGET_LINK_LIBRARIES(${TARGET} ${dep})
+    ENDFOREACH(dep)
+  ENDIF(UNIX AND NOT APPLE)
 ENDMACRO()
